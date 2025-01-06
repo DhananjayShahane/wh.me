@@ -4,7 +4,7 @@ const Footer = () => {
       <div className="container px-4 mx-auto">
         <div className="pt-24 pb-11 mx-auto max-w-4xl">
           <a className="block md:mx-auto mb-5 max-w-full md:max-w-max text-center" href="#">
-            <h2 className="text-2xl font-medium text-primary">WhatsAppMe</h2>
+            <h2 className="text-2xl font-medium text-primary">Wh.Me</h2>
           </a>
           <div className="flex flex-wrap justify-center text-center -mx-3 lg:-mx-6">
             <div className="w-full md:w-auto p-3 md:px-6"><a href="/careers"
@@ -25,7 +25,7 @@ const Footer = () => {
       <div className="border-b border-gray-100"></div>
       <div className="container px-4 mx-auto">
         <p className="py-10 md:pb-20 text-md text-gray-400 font-medium text-center">
-        &copy; {new Date().getFullYear()} WhatsAppMe.com
+        &copy; {new Date().getFullYear()} Wh.Me.com
           All rights reserved.
         </p>
       </div>
