@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 const WhatsAppForm = () => {
   const [countryCode, setCountryCode] = useState("India (+91)");
   const [mobileNumber, setMobileNumber] = useState("");
+  const [baseURL, setBaseUrl] = useState("");
   const [message, setMessage] = useState("Hello");
   const [isCustomMessage, setIsCustomMessage] = useState(false);
 
@@ -14,8 +15,13 @@ const WhatsAppForm = () => {
   // Load the custom message from local storage on component mount
   useEffect(() => {
     const savedMessage = localStorage.getItem("customMessage");
+    const savedBaseUrl = localStorage.getItem("baseUrl");
     if (savedMessage) {
       setMessage(savedMessage);
+      setIsCustomMessage(true);
+    }
+    if (savedBaseUrl) {
+      setBaseUrl(savedBaseUrl);
       setIsCustomMessage(true);
     }
   }, []);
@@ -39,6 +45,13 @@ const WhatsAppForm = () => {
       isValid = false;
     }
 
+
+    if(!baseURL){
+      newErrors.baseURL = "Base URL is required.";
+      isValid = false;
+    }
+
+
     if (!message.trim()) {
       newErrors.message = "Message cannot be empty.";
       isValid = false;
@@ -50,26 +63,44 @@ const WhatsAppForm = () => {
 
   const sendWhatsAppMessage = () => {
     if (!validateForm()) return;
-
-    const baseURL = "https://api.whatsapp.com/send";
-    const url = `${baseURL}?phone=${countryCode}${mobileNumber}&text=${encodeURIComponent(
-      message
-    )}`;
+  
+    const phoneNumber = `${countryCode}${mobileNumber}`;
+    const url = `${baseURL}?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+  
     window.open(url, "_blank");
   };
+  
+  
 
   const toggleCustomMessage = () => {
     setIsCustomMessage(!isCustomMessage);
     if (!isCustomMessage) {
       localStorage.setItem("customMessage", message);
+      localStorage.setItem("baseUrl", baseURL);
     } else {
       localStorage.removeItem("customMessage");
+      localStorage.removeItem("baseUrl");
     }
   };
+
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded shadow-md my-10">
       <h2 className="text-xl font-bold mb-4">Send a Message</h2>
+      <div className="mb-4">
+        <label className="block text-gray-700 mb-2">Base Url:</label>
+        <input
+          type="text"
+          className={`w-full border rounded px-3 py-2 bg-slate-50 ${errors.baseURL ? "border-red-500" : ""
+            }`}
+          placeholder="Enter base url"
+          value={baseURL}
+          onChange={(e) => setBaseUrl(e.target.value)}
+        />
+        {errors.baseURL && (
+          <p className="text-red-500 text-sm mt-1">{errors.baseURL}</p>
+        )}
+      </div>
       <div className="mb-4">
         <label className="block text-gray-700 mb-2">Country Code:</label>
         <select
@@ -77,11 +108,11 @@ const WhatsAppForm = () => {
           value={countryCode}
           onChange={(e) => setCountryCode(e.target.value)}
         >
-          <option value="India (+91)">India (+91)</option>
-          <option value="USA (+1)">USA (+1)</option>
-          <option value="UK (+44)">UK (+44)</option>
+          <option value="+91">+91</option>
         </select>
       </div>
+
+
       <div className="mb-4">
         <label className="block text-gray-700 mb-2">Mobile Number:</label>
         <input
